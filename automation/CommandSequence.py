@@ -90,4 +90,12 @@ class CommandSequence:
         command = ('DUMP_PAGE_SOURCE', dump_name,)
         self.commands_with_timeout.append((command, timeout))
 
+    def extract_elements(self, selector, timeout=30):
+        """Extracts text from elements specified by the given CSS selector."""
+        self.total_timeout += timeout
+        if not self.contains_get_or_browse:
+            raise CommandExecutionError("No get or browse request preceding "
+                                        "the extract elements command", self)
+        command = ('EXTRACT_ELEMENTS', selector,)
+        self.commands_with_timeout.append((command, timeout))
 

@@ -117,3 +117,11 @@ CREATE TABLE IF NOT EXISTS CrawlHistory (
     dtg DATETIME DEFAULT (CURRENT_TIMESTAMP),
     FOREIGN KEY(crawl_id) REFERENCES crawl(id));
 
+CREATE TABLE IF NOT EXISTS ExtractedElements (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    crawl_id INTEGER NOT NULL,
+    page_url VARCHAR(500) NOT NULL,
+    selector TEXT NOT NULL,
+    idx INTEGER NOT NULL,
+    contents TEXT NOT NULL,
+    FOREIGN KEY(crawl_id) REFERENCES crawl(id));

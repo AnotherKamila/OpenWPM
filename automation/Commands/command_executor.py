@@ -48,3 +48,7 @@ def execute_command(command, webdriver, proxy_queue, browser_settings, browser_p
     if command[0] == 'DUMP_PAGE_SOURCE':
         browser_commands.dump_page_source(dump_name=command[1], webdriver=webdriver,
                                           browser_params=browser_params, manager_params=manager_params)
+
+    if command[0] == 'EXTRACT_ELEMENTS':
+        browser_commands.extract_elements(selector=command[1], webdriver=webdriver,
+                                          browser_params=browser_params, manager_params=manager_params)

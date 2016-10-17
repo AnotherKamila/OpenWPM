@@ -69,6 +69,23 @@ def wait_and_find(driver, locator_type, locator, timeout=3, check_iframes=True):
             driver.switch_to_default_content()
         raise NoSuchElementException, "Element not found during wait_and_find"
 
+def wait_and_find_all(driver, locator_type, locator, timeout=5, check_iframes=True):
+    res = []
+    wait_until_loaded(driver, timeout)
+    res += driver.find_elements(locator_type, locator)
+    if check_iframes: #this may return the browser with an iframe active
+        driver.switch_to_default_content()
+        iframes = driver.find_elements_by_tag_name('iframe')
+
+        for iframe in iframes:
+            driver.switch_to_default_content()
+            driver.switch_to_frame(iframe)
+            wait_until_loaded(driver, timeout)
+            res += driver.find_elements(locator_type, locator)
+
+    driver.switch_to_default_content()
+    return res
+
 def is_found(driver, locator_type, locator, timeout=3):
     try:
         w = WebDriverWait(driver, timeout)

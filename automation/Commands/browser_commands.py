@@ -12,7 +12,7 @@ from ..SocketInterface import clientsocket
 from ..MPLogger import loggingclient
 from utils.lso import get_flash_cookies
 from utils.firefox_profile import get_cookies  # todo: add back get_localStorage,
-from utils.webdriver_extensions import scroll_down, wait_until_loaded, get_intra_links
+from utils.webdriver_extensions import scroll_down, wait_until_loaded, get_intra_links, wait_and_find_all
 
 # Library for core WebDriver-based browser commands
 
@@ -233,3 +233,24 @@ def save_screenshot(screenshot_name, webdriver, browser_params, manager_params):
 def dump_page_source(dump_name, webdriver, browser_params, manager_params):
     with open(os.path.join(manager_params['source_dump_path'], dump_name + '.html'), 'wb') as f:
         f.write(webdriver.page_source.encode('utf8') + '\n')
+
+def extract_elements(selector, webdriver, browser_params, manager_params):
+    els = wait_and_find_all(webdriver, 'css selector', selector)
+    logger = loggingclient(*manager_params['logger_address'])
+    logger.info("extract_elements: found {} elements for selector `{}'".format(len(els), selector))
+
+    sock = clientsocket()
+    sock.connect(*manager_params['aggregator_address'])
+    QUERY = """
+        INSERT INTO ExtractedElements
+        (crawl_id, page_url, selector, idx, contents)
+        VALUES (?,?,?,?,?);
+        """
+    for i in xrange(len(els)):
+        sock.send((QUERY, (
+            browser_params['crawl_id'],
+            webdriver.current_url,
+            selector,
+            i,
+            els[i].text)))
+    sock.close()
