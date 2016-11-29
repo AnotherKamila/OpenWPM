@@ -52,3 +52,12 @@ def execute_command(command, webdriver, proxy_queue, browser_settings, browser_p
     if command[0] == 'EXTRACT_ELEMENTS':
         browser_commands.extract_elements(selector=command[1], webdriver=webdriver,
                                           browser_params=browser_params, manager_params=manager_params)
+    if command[0] == 'RUN_CUSTOM_FUNCTION':
+        arg_dict = {"command": command,
+                    "driver": webdriver,
+                    "proxy_queue": proxy_queue,
+                    "browser_settings": browser_settings,
+                    "browser_params": browser_params,
+                    "manager_params": manager_params,
+                    "extension_socket": extension_socket}
+        command[1](*command[2], **arg_dict)
