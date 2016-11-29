@@ -25,6 +25,14 @@ def scroll_to_bottom(driver):
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     return
 
+def scroll_through_whole_page(driver, speed=10):
+    at_bottom = False
+    while not at_bottom:
+        driver.execute_script("window.scrollBy(0,"+str(speed)+")")
+        at_bottom = driver.execute_script("return (((window.scrollY + window.innerHeight ) +100 > document.body.clientHeight ))")
+    time.sleep(0.1 + random.random())
+    time.sleep(2)  # because the universe is stupid
+
 def is_loaded(webdriver):
     return (webdriver.execute_script("return document.readyState") == "complete")
 
@@ -69,7 +77,7 @@ def wait_and_find(driver, locator_type, locator, timeout=3, check_iframes=True):
             driver.switch_to_default_content()
         raise NoSuchElementException, "Element not found during wait_and_find"
 
-def wait_and_find_all(driver, locator_type, locator, timeout=5, check_iframes=True):
+def wait_and_find_all(driver, locator_type, locator, timeout=5, check_iframes=True, scroll=False):
     res = []
     wait_until_loaded(driver, timeout)
     res += driver.find_elements(locator_type, locator)

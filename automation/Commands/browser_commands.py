@@ -12,7 +12,7 @@ from ..SocketInterface import clientsocket
 from ..MPLogger import loggingclient
 from utils.lso import get_flash_cookies
 from utils.firefox_profile import get_cookies  # todo: add back get_localStorage,
-from utils.webdriver_extensions import scroll_down, wait_until_loaded, get_intra_links, wait_and_find_all
+from utils.webdriver_extensions import scroll_down, scroll_through_whole_page, wait_until_loaded, get_intra_links, wait_and_find_all
 
 # Library for core WebDriver-based browser commands
 
@@ -69,7 +69,7 @@ def tab_restart_browser(webdriver):
     time.sleep(0.5)
 
 
-def get_website(url, sleep, visit_id, webdriver, proxy_queue, browser_params, extension_socket):
+def get_website(url, sleep, scroll, visit_id, webdriver, proxy_queue, browser_params, extension_socket):
     """
     goes to <url> using the given <webdriver> instance
     <proxy_queue> is queue for sending the proxy the current first party site
@@ -95,6 +95,9 @@ def get_website(url, sleep, visit_id, webdriver, proxy_queue, browser_params, ex
 
     # Sleep after get returns
     time.sleep(sleep)
+
+    # scroll if wanted
+    if scroll: scroll_through_whole_page(webdriver)
 
     # Close modal dialog if exists
     try:

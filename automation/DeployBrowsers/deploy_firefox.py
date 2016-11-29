@@ -20,6 +20,7 @@ def deploy_firefox(status_queue, browser_params, manager_params, crash_recovery)
     display_pid = None
     display_port = None
     fp = webdriver.FirefoxProfile()
+    print('*** Created Firefox profile at:', fp.path)
     browser_profile_path = fp.path + '/'
     status_queue.put(('STATUS','Profile Created',browser_profile_path))
 
